@@ -1,7 +1,16 @@
-use bevy::asset::RenderAssetUsages;
-use bevy::dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin};
+mod states;
+mod types;
+mod loading;
+mod game;
+mod pause;
+mod character;
+mod vehicle;
+
 use bevy::prelude::*;
 use bevy::window::{MonitorSelection, WindowMode};
+use bevy::dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin};
+
+use states::{GameState, InGameState};
 
 fn main() {
     App::new()
@@ -16,7 +25,6 @@ fn main() {
         .add_plugins(FpsOverlayPlugin {
             config: FpsOverlayConfig {
                 text_config: TextFont {
-                    // Используем FontSize::Px для размера в пикселях
                     font_size: FontSize::Px(24.0),
                     ..default()
                 },
@@ -25,54 +33,19 @@ fn main() {
             },
         })
         .insert_resource(ClearColor(Color::BLACK))
-        .add_systems(Startup, setup)
-        .add_systems(Update, rotate_triangle)
+        .init_state::<GameState>()
+        .add_sub_state::<InGameState>()
+        .add_systems(Startup, setup_camera)
+        .add_plugins((
+            loading::LoadingPlugin,
+            game::GamePlugin,
+            pause::PausePlugin,
+            character::CharacterPlugin,
+            vehicle::VehiclePlugin,
+        ))
         .run();
 }
 
-#[derive(Component)]
-struct Triangle;
-
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    // 2D-камера без сглаживания
+fn setup_camera(mut commands: Commands) {
     commands.spawn((Camera2d, Msaa::Off));
-
-    let r = 100.0_f32;
-    let half = r * 3.0_f32.sqrt() / 2.0;
-
-    let mut mesh = Mesh::new(
-        bevy::render::mesh::PrimitiveTopology::TriangleList,
-        RenderAssetUsages::default(),
-    );
-
-    mesh.insert_attribute(
-        Mesh::ATTRIBUTE_POSITION,
-        vec![[0.0, r, 0.0], [-half, -r / 2.0, 0.0], [half, -r / 2.0, 0.0]],
-    );
-
-    mesh.insert_attribute(
-        Mesh::ATTRIBUTE_COLOR,
-        vec![
-            [1.0, 0.0, 0.0, 1.0],
-            [0.0, 1.0, 0.0, 1.0],
-            [0.0, 0.0, 1.0, 1.0],
-        ],
-    );
-
-    commands.spawn((
-        Triangle,
-        Mesh2d(meshes.add(mesh)),
-        MeshMaterial2d(materials.add(ColorMaterial::default())),
-        Transform::from_xyz(0.0, 0.0, 0.0),
-    ));
-}
-
-fn rotate_triangle(time: Res<Time>, mut query: Query<&mut Transform, With<Triangle>>) {
-    for mut transform in &mut query {
-        transform.rotate_z(time.delta_secs() * 1.5);
-    }
 }

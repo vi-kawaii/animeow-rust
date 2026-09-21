@@ -1,10 +1,8 @@
 mod states;
 mod types;
-mod loading;
-mod game;
-mod pause;
-mod character;
-mod vehicle;
+mod modes;
+mod actor;
+mod controller;
 
 use bevy::prelude::*;
 use bevy::window::{MonitorSelection, WindowMode};
@@ -37,11 +35,9 @@ fn main() {
         .add_sub_state::<InGameState>()
         .add_systems(Startup, setup_camera)
         .add_plugins((
-            loading::LoadingPlugin,
-            game::GamePlugin,
-            pause::PausePlugin,
-            character::CharacterPlugin,
-            vehicle::VehiclePlugin,
+            modes::ModesPlugin,
+            actor::ActorPlugin,
+            controller::ControllerPlugin,
         ))
         .run();
 }

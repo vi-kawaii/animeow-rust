@@ -2,9 +2,9 @@ use bevy::prelude::*;
 use crate::states::{GameState, InGameState};
 use crate::types::*;
 
-pub struct CharacterPlugin;
+pub struct PlayerControllerPlugin;
 
-impl Plugin for CharacterPlugin {
+impl Plugin for PlayerControllerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_player)
            .add_systems(

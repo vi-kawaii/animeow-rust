@@ -1,14 +1,18 @@
+pub mod dialog;
+pub mod fight;
+pub mod hud;
+pub mod move_;
+
 use bevy::prelude::*;
 use bevy::asset::RenderAssetUsages;
 use crate::states::{GameState, InGameState};
-use crate::types::*;
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<GameSettings>()
-           .init_resource::<Score>()
+        app.init_resource::<crate::types::GameSettings>()
+           .init_resource::<crate::types::Score>()
            .add_systems(OnEnter(GameState::InGame), setup_game)
            .add_systems(
                 Update,

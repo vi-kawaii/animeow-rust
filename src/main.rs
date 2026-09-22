@@ -11,6 +11,7 @@ use bevy::dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin};
 use states::{GameState, InGameState};
 
 fn main() {
+    println!("Hello, world!");
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {

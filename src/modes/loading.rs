@@ -1,16 +1,13 @@
-use bevy::prelude::*;
 use crate::states::GameState;
+use bevy::prelude::*;
 
 pub struct LoadingPlugin;
 
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Loading), setup_loading)
-           .add_systems(
-                Update,
-                finish_loading.run_if(in_state(GameState::Loading)),
-            )
-           .add_systems(OnExit(GameState::Loading), cleanup_loading);
+            .add_systems(Update, finish_loading.run_if(in_state(GameState::Loading)))
+            .add_systems(OnExit(GameState::Loading), cleanup_loading);
     }
 }
 
@@ -21,10 +18,7 @@ struct LoadingTimer(Timer);
 struct LoadingUi;
 
 fn setup_loading(mut commands: Commands) {
-    commands.insert_resource(LoadingTimer(Timer::from_seconds(
-        5.0,
-        TimerMode::Once,
-    )));
+    commands.insert_resource(LoadingTimer(Timer::from_seconds(5.0, TimerMode::Once)));
 
     commands
         .spawn((
@@ -60,10 +54,7 @@ fn finish_loading(
     }
 }
 
-fn cleanup_loading(
-    mut commands: Commands,
-    query: Query<Entity, With<LoadingUi>>,
-) {
+fn cleanup_loading(mut commands: Commands, query: Query<Entity, With<LoadingUi>>) {
     for entity in &query {
         commands.entity(entity).despawn();
     }

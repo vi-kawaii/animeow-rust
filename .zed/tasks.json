@@ -2,12 +2,13 @@
   {
     "label": "dump",
     "command": "rust-script \"$ZED_WORKTREE_ROOT/scripts/dump_context.rs\"",
-    "reveal": "never",
-    "hide": "always",
   },
   {
     "label": "paste",
     "command": "rust-script \"$ZED_WORKTREE_ROOT/scripts/paste_unpack.rs\"",
-    "hide": "always",
+  },
+  {
+    "label": "run",
+    "command": "cargo run",
   },
 ]

@@ -1,16 +1,13 @@
-use bevy::prelude::*;
 use crate::states::{GameState, InGameState};
+use bevy::prelude::*;
 
 pub struct PausePlugin;
 
 impl Plugin for PausePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-                Update,
-                toggle_pause.run_if(in_state(GameState::InGame)),
-            )
-           .add_systems(OnEnter(InGameState::Paused), setup_pause_ui)
-           .add_systems(OnExit(InGameState::Paused), cleanup_pause_ui);
+        app.add_systems(Update, toggle_pause.run_if(in_state(GameState::InGame)))
+            .add_systems(OnEnter(InGameState::Paused), setup_pause_ui)
+            .add_systems(OnExit(InGameState::Paused), cleanup_pause_ui);
     }
 }
 
@@ -25,7 +22,7 @@ fn toggle_pause(
     if keys.just_pressed(KeyCode::Escape) {
         match current.get() {
             InGameState::Playing => next.set(InGameState::Paused),
-            InGameState::Paused  => next.set(InGameState::Playing),
+            InGameState::Paused => next.set(InGameState::Playing),
         }
     }
 }

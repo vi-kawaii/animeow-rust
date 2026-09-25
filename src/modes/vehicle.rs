@@ -1,18 +1,18 @@
-use bevy::prelude::*;
-use bevy::asset::RenderAssetUsages;
 use crate::states::{GameState, InGameState};
 use crate::types::*;
+use bevy::asset::RenderAssetUsages;
+use bevy::prelude::*;
 
 pub struct VehiclePlugin;
 
 impl Plugin for VehiclePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_vehicle)
-           .add_systems(
+            .add_systems(
                 Update,
                 rotate_vehicle.run_if(in_state(InGameState::Playing)),
             )
-           .add_systems(OnExit(GameState::InGame), cleanup_vehicle);
+            .add_systems(OnExit(GameState::InGame), cleanup_vehicle);
     }
 }
 
@@ -57,10 +57,7 @@ fn rotate_vehicle(time: Res<Time>, mut query: Query<&mut Transform, With<Vehicle
     }
 }
 
-fn cleanup_vehicle(
-    mut commands: Commands,
-    query: Query<Entity, With<Vehicle>>,
-) {
+fn cleanup_vehicle(mut commands: Commands, query: Query<Entity, With<Vehicle>>) {
     for entity in &query {
         commands.entity(entity).despawn();
     }

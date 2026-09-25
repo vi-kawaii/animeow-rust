@@ -1,17 +1,18 @@
-mod states;
-mod types;
-mod modes;
 mod actor;
 mod controller;
+mod core;
+mod modes;
+mod states;
+mod types;
 
+use bevy::dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin};
 use bevy::prelude::*;
 use bevy::window::{MonitorSelection, WindowMode};
-use bevy::dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin};
 
 use states::{GameState, InGameState};
 
 fn main() {
-    println!("Hello, world!");
+    println!("Animeow starting...");
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
@@ -31,18 +32,14 @@ fn main() {
                 ..default()
             },
         })
-        .insert_resource(ClearColor(Color::BLACK))
+        .insert_resource(ClearColor(Color::srgb(0.05, 0.05, 0.1)))
         .init_state::<GameState>()
         .add_sub_state::<InGameState>()
-        .add_systems(Startup, setup_camera)
         .add_plugins((
+            core::CorePlugin,
             modes::ModesPlugin,
             actor::ActorPlugin,
             controller::ControllerPlugin,
         ))
         .run();
-}
-
-fn setup_camera(mut commands: Commands) {
-    commands.spawn((Camera2d, Msaa::Off));
 }
